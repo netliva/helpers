@@ -5,6 +5,11 @@ namespace Netliva\Helpers;
 class CurrencySymbols
 {
 	private $symbols = [];
+
+	public function __construct () {
+		$this->prepareSybols();
+	}
+
 	public function get($currency_code, $return_code_if_not_exist = true)
 	{
 		if (key_exists($currency_code, $this->symbols) and $this->symbols[$currency_code])
