@@ -1,0 +1,15 @@
+{
+	"name": "netliva/helpers",
+	"license": "MIT",
+	"type": "library",
+	"description": "Netliva Helper Classes",
+	"autoload": {
+		"psr-4": {
+			"Netliva\\Helpers\\": "/"
+		}
+	},
+	"require": {
+		"php": ">=5.3.3",
+	},
+	"minimum-stability": "stable"
+}
