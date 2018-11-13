@@ -16,7 +16,7 @@ class IpGeoInfo
 	{
 		$output = NULL;
 		if (filter_var($this->ip, FILTER_VALIDATE_IP) === FALSE) {
-			$this->ip = $_SERVER["REMOTE_ADDR"];
+			$this->ip = @$_SERVER["REMOTE_ADDR"];
 			if ($this->deep_detect) {
 				if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP))
 					$this->ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
