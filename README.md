@@ -35,8 +35,10 @@ echo  $currency_symbols->get("TRY")
  <?php
  //...
  
- $ip_geo_info = new Netliva\Helper\IpGeoInfo();
- echo $ip_geo_info->get("city");
+ $ip_geo_helper = new Netliva\Helper\IpGeo();
+ echo $ip_geo_helper->getIp();
+ // output: "123.123.123.123" (ip of your)
+ echo $ip_geo_helper->getInfo("city");
  // output: "Izmir" (city of your location)
   
  //...
@@ -50,9 +52,9 @@ Supported purposes are `"country", "country_code", "state", "region", "city", "a
  <?php
  //...
  
- $ip_geo_info = new Netliva\Helper\IpGeoInfo();
- $ip_geo_info->setIp("172.217.168.238");
- echo $ip_geo_info->get("country");
+ $ip_geo_helper = new Netliva\Helper\IpGeo();
+ $ip_geo_helper->setIp("172.217.168.238");
+ echo $ip_geo_helper->getInfo("country");
  // output: "United States" (country of google ip location)
   
  //...
@@ -64,13 +66,14 @@ Supported purposes are `"country", "country_code", "state", "region", "city", "a
  <?php
  //...
  
- $ip_geo_info = new Netliva\Helper\IpGeoInfo();
- echo $ip_geo_info->get();
+ $ip_geo_helper = new Netliva\Helper\IpGeo();
+ echo $ip_geo_helper->getInfo();
  /*
   * output:
   * 
   * Array
   * (
+  *	 [ip] => 123.123.123.123
   *	 [city] => Izmir
   *	 [state] => Izmir
   *	 [country] => Turkey

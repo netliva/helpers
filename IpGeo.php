@@ -1,31 +1,22 @@
 <?php
 namespace Netliva\Helpers;
 
-class IpGeoInfo
+class IpGeo
 {
 
 	private $purpose, $ip, $deep_detect;
 	public function __construct ($purpose = "all", $ip = NULL, $deep_detect = TRUE)
 	{
 		$this->purpose = $purpose;
-		$this->ip = $ip;
 		$this->deep_detect = $deep_detect;
+		$this->setIp($ip);
 	}
 
-	function get($purpose = null)
+	function getInfo($purpose = null)
 	{
 		$output = NULL;
-		if (filter_var($this->ip, FILTER_VALIDATE_IP) === FALSE) {
-			$this->ip = @$_SERVER["REMOTE_ADDR"];
-			if ($this->deep_detect) {
-				if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP))
-					$this->ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-				if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP))
-					$this->ip = $_SERVER['HTTP_CLIENT_IP'];
-			}
-		}
 		$purpose    = str_replace(array("name", "\n", "\t", " ", "-", "_"), NULL, strtolower(trim($purpose?$purpose:$this->purpose)));
-		$support    = array("all", "country", "countrycode", "state", "region", "city", "address", "currencycode", "currencysymbol", "currencyconverter");
+		$support    = array("all", "ip", "country", "countrycode", "state", "region", "city", "address", "currencycode", "currencysymbol", "currencyconverter");
 
 		if (filter_var($this->ip, FILTER_VALIDATE_IP) && in_array($purpose, $support))
 		{
@@ -36,6 +27,7 @@ class IpGeoInfo
 				{
 					case "all":
 						$output = array(
+							"ip"					=> $this->ip,
 							"city"					=> @$data->geoplugin_city,
 							"state"					=> @$data->geoplugin_regionName,
 							"country"				=> @$data->geoplugin_countryName,
@@ -54,6 +46,9 @@ class IpGeoInfo
 						if (@strlen($data->geoplugin_city) >= 1)
 							$address[] = $data->geoplugin_city;
 						$output = implode(", ", array_reverse($address));
+						break;
+					case "ip":
+						$output = $this->getIp();
 						break;
 					case "city":
 						$output = @$data->geoplugin_city;
@@ -118,6 +113,24 @@ class IpGeoInfo
 	public function setIp ($ip): void
 	{
 		$this->ip = $ip;
+
+		if (filter_var($this->ip, FILTER_VALIDATE_IP) === FALSE) {
+			$this->ip = @$_SERVER["REMOTE_ADDR"];
+			if ($this->deep_detect) {
+				if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP))
+					$this->ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+				if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP))
+					$this->ip = $_SERVER['HTTP_CLIENT_IP'];
+			}
+		}
+
+	}
+	/**
+	 * @return null|string
+	 */
+	public function getIp ()
+	{
+		return $this->ip;
 	}
 
 	/**
